@@ -55,5 +55,6 @@ jobs:
         with:
           app-name: 'pdi-app'
           slot-name: 'Production'
-          package: .
+          package: ./dist
+
           
