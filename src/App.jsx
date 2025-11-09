@@ -12,6 +12,31 @@ async function authtest() {
 
 function App() {
 
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
+
+async function sendMessage(userInput) {
+  try {
+    const response = await fetch("http://localhost:5000/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userInput }), // send a single message
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setResponse(data.reply);
+  } catch (err) {
+    console.error(err);
+    setResponse("Oops, something went wrong.");
+  }
+}
+
+
+
   const [movies, setMovies] = useState([])
 
   const apiKey = import.meta.env.VITE_API_KEY_2;
@@ -72,9 +97,27 @@ function App() {
           ))}
           </div>
         </div>
+        
+        <div style={{ padding: 20 }}>
+        <h1>Chat with AI</h1>
+        <textarea
+          rows={3}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Ask me anything..."
+        />
+        <br />
+        <button onClick={() => sendMessage(message)}>Send</button>
+
+        <p>
+          <strong>Response:</strong>{" "}
+          {response ? response.content : "No response yet"}
+        </p>
+      </div>
 
       </div>
     </>
+    
   )
 }
 
