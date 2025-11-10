@@ -14,8 +14,6 @@ function App() {
 
   const [movies, setMovies] = useState([])
 
-  const apiKey = import.meta.env.VITE_API_KEY_2;
-
   const fetchData = async (query) => {
     if (!query) return setMovies([])
 
