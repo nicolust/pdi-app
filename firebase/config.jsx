@@ -1,5 +1,6 @@
 import { meta } from "@eslint/js";
 import { initializeApp } from "firebase/app";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -16,4 +17,13 @@ export function firebaseAuthTest(){
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app)
+export const MOVIES_REF = 'Favourites'
+
+/*export async function getMovies(db = database) {
+  const moviesCol = collection(db, MOVIES_REF)
+  const movieSnapshot = await getDocs(moviesCol)
+  const moviesList = movieSnapshot.docs.map(doc => doc.data())
+  return moviesList
+}*/
 
