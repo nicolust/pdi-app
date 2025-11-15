@@ -3,7 +3,10 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { getAuthentication } from './TMDB/TMDBAuth.jsx'
+import { collection, doc, setDoc } from 'firebase/firestore'
+import { MOVIES_REF, db } from '../firebase/config.jsx'
 import js from '@eslint/js'
+import firebase from 'firebase/compat/app'
 
 async function authtest() {
   const data = await getAuthentication();
