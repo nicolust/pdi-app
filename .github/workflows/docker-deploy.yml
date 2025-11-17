@@ -1,4 +1,4 @@
-name: Build and Deploy Docker to Azure
+name: Build and Deploy Docker to Docker Hub
 
 on:
   push:
@@ -6,24 +6,20 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Login to Azure Container Registry
-        uses: azure/docker-login@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          login-server: pdiacr.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker image
-        run: |
-          docker build -t pdiacr.azurecr.io/pdi-app:latest .
+      - name: Build image
+        run: docker build -t yourname/pdi-app:latest .
 
-      - name: Push Docker image
-        run: |
-          docker push pdiacr.azurecr.io/pdi-app:latest
+      - name: Push image
+        run: docker push yourname/pdi-app:latest
