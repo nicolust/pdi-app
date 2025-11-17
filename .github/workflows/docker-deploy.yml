@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build image
-        run: docker build -t yourname/pdi-app-container:latest .
+        run: docker build -t nicolust/pdi-app-container:latest .
 
       - name: Push image
-        run: docker push yourname/pdi-app-container:latest
+        run: docker push nicolust/pdi-app-container:latest
