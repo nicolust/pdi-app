@@ -28,7 +28,7 @@ jobs:
 
       - name: Install backend deps
         working-directory: ./backend
-        run: npm install
+        run: npm ci --omit=dev
 
       - name: Copy frontend build into backend/public
         run: |
