@@ -4,46 +4,39 @@ on:
   push:
     branches:
       - main
-      - AIChat
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v3
-        
-      - name: Setup Node 22
+
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 22
 
-      # --- FRONTEND ---
-      - name: Install Frontend Dependencies
-        run: |
-          cd frontend
-          npm install
+      - name: Install frontend deps
+        working-directory: ./frontend
+        run: npm install
 
-      - name: Build Frontend
-        run: |
-          cd frontend
-          npm run build
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
 
-      # --- BACKEND ---
-      - name: Install Backend Dependencies
-        run: |
-          cd backend
-          npm install
+      - name: Install backend deps
+        working-directory: ./backend
+        run: npm install
 
-      - name: Copy Frontend Build to Backend Public Folder
+      - name: Copy frontend build into backend/public
         run: |
           rm -rf backend/public
           mkdir -p backend/public
           cp -R frontend/dist/* backend/public/
 
-      # --- DEPLOY ---
-      - name: Deploy to Azure Web App
+      - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
           app-name: pdi-app
