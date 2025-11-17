@@ -10,15 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: Setup Node 22
         uses: actions/setup-node@v3
         with:
           node-version: 22
 
-      - name: Install frontend deps
+      # FRONTEND
+      - name: Install frontend dependencies
         working-directory: ./frontend
         run: npm install
 
@@ -26,19 +27,29 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
-      - name: Install backend deps
+      # BACKEND
+      - name: Install backend dependencies
         working-directory: ./backend
-        run: npm ci --omit=dev
+        run: npm install --production
 
-      - name: Copy frontend build into backend/public
+      # COPY FRONTEND → BACKEND/PUBLIC
+      - name: Copy frontend build to backend/public
         run: |
           rm -rf backend/public
           mkdir -p backend/public
           cp -R frontend/dist/* backend/public/
 
-      - name: Deploy to Azure
+      # VERIFY node_modules
+      - name: Verify backend node_modules
+        working-directory: ./backend
+        run: |
+          echo "Listing backend node_modules"
+          ls -la node_modules
+
+      # DEPLOY
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: pdi-app
+          app-name: pdi-app-gwgtbxf7etcahxeg
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: backend
