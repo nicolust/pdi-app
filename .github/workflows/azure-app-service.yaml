@@ -1,0 +1,55 @@
+name: Deploy App to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # FRONTEND
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      # BACKEND
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm install --production
+
+      # COPY FRONTEND → BACKEND/PUBLIC
+      - name: Copy frontend build to backend/public
+        run: |
+          rm -rf backend/public
+          mkdir -p backend/public
+          cp -R frontend/dist/* backend/public/
+
+      # VERIFY node_modules
+      - name: Verify backend node_modules
+        working-directory: ./backend
+        run: |
+          echo "Listing backend node_modules"
+          ls -la node_modules
+
+      # DEPLOY
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: pdi-app
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: backend
