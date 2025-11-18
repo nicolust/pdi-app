@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { getAuthentication } from './TMDB/TMDBAuth.jsx'
-import { collection, doc, setDoc } from 'firebase/firestore'
+import { collection, doc, query, setDoc } from 'firebase/firestore'
 import { MOVIES_REF, db } from '../firebase/config.jsx'
 import js from '@eslint/js'
 import firebase from 'firebase/compat/app'
@@ -13,10 +13,52 @@ async function authtest() {
   console.log(data);
 }
 
+
+
 function App() {
+
+  const [movie, setMovie] = useState('')
+  const [movieList, setMovieList] = ('')
+
+
+  // Haetaan data
+
+  const fetchData = getAuthentication()
+
+// Lisätään tekstikentän sisältö fribaseen
+  const addMovie = () => {
+    const docData = {
+    stringExample: {movie}
+};
+
+    setDoc(doc(db, "Favourites", "movie2"), docData);
+  }
+
+
+
+  return(
+    <>
+      <div>
+        <input type="text" 
+        value={movie} 
+        onChange={(e) => setMovie(e.target.value)} />
+
+        <button onClick={addMovie()}>Add new movie</button>
+      </div>
+    </>
+  )
+}
+
+
+
+/*function App() {
 
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
+
+  const [movieList, setMovieList] = useState([])
+
+  const [movie, setMovie] = useState('')
 
 async function sendMessage(userInput) {
   try {
@@ -39,11 +81,17 @@ async function sendMessage(userInput) {
 }
 
 
+  const addMovie = () => {
+    const docData = {
+    stringExample: {movie}
+};
 
-  const [movies, setMovies] = useState([])
+    setDoc(doc(db, "Favourites", "movie2"), docData);
+  }
+
 
   const fetchData = async (query) => {
-    if (!query) return setMovies([])
+    if (!query) return setMovieList([])
 
     const res = await fetch(
       `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}`,
@@ -55,21 +103,15 @@ async function sendMessage(userInput) {
       }
     )
     const movieData = await res.json()
-    setMovies(movieData.results || [])
+    setMovieList(movieData.results || [])
+
+    
+  console.log(res)
+
   }
 
   return (
     <>
-      <div>
-        <div>
-          <a href="https://vite.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>
-        <h1>Vite + React</h1>
         <div className="card">
           <button onClick={(authtest)}>
           </button>
@@ -77,14 +119,12 @@ async function sendMessage(userInput) {
             Edit <code>src/App.jsx</code> and save to test HMR
           </p>
         </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
+        
 
         <div>
           <input onChange={(e) => fetchData(e.target.value)}/>
 
-          <div>{movies.map(movie => (
+          <div>{movieList.map(movie => (
             <div key={movie.id}>
               <img src={
                 movie.poster_path
@@ -97,6 +137,14 @@ async function sendMessage(userInput) {
             </div>
           ))}
           </div>
+        </div>
+
+        <div>
+        <input type="text" 
+        value={movie} 
+        onChange={(e) => setMovie(e.target.value)} />
+
+        <button onClick={addMovie()}>Add new movie</button>
         </div>
         
         <div style={{ padding: 20 }}>
@@ -115,11 +163,10 @@ async function sendMessage(userInput) {
           {response ? response.content : "No response yet"}
         </p>
       </div>
-
-      </div>
     </>
     
   )
-}
+}*/
 
 export default App
+
